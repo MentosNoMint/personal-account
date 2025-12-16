@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+body {
+    font-family: "Wix Madefor Display", sans-serif;
+}
+
+@theme inline {
+    --color-custom-gray: #F1F2F7;
+    --color-custom-yellow: #F3D45E;
+}
