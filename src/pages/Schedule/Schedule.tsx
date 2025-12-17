@@ -1,11 +1,11 @@
-import PairWrapper from "@/pages/Schedule/components/pairs/PairWrapper.tsx";
+import WeekHeader from "@/pages/Schedule/components/WeekHeader.tsx";
 
 const Schedule = () => {
     return (
-        <>
-            <PairWrapper/>
-        </>
+        <div className="flex flex-col">
+            <WeekHeader/>
+        </div>
     );
-};
+}
 
 export default Schedule;
