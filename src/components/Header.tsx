@@ -1,6 +1,6 @@
 const Header = () => {
     return (
-        <header className="w-full flex flex-col mb-5 mt-5">
+        <header className="w-full flex flex-col mb-5 mt-5 px-2">
             <div className="w-full flex justify-between">
                 <div className="h-14.5 w-14.5 rounded-full bg-custom-gray flex justify-center items-center">
                     <img src="/assets/images/user.svg" className="w-4.5 h-4.5 opacity-50" alt="icon"/>
