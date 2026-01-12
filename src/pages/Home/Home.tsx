@@ -5,17 +5,17 @@ import CurrentPlace from "@/pages/Home/components/widgets/CurrentPlace.tsx";
 import SendMessageTV from "@/pages/Home/components/widgets/SendMessageTV.tsx";
 
 const Home = () => {
-    return (
-        <div className="flex gap-2 flex-col">
-            <CurrentPair/>
-            <AverageScore/>
-            <div className="flex gap-2">
-                <TotalNumberScore/>
-                <CurrentPlace/>
-            </div>
-            <SendMessageTV/>
-        </div>
-    );
+  return (
+    <div className="flex gap-2 flex-col">
+      <CurrentPair />
+      <AverageScore />
+      <div className="flex gap-2">
+        <TotalNumberScore />
+        <CurrentPlace />
+      </div>
+      <SendMessageTV />
+    </div>
+  );
 };
 
 export default Home;

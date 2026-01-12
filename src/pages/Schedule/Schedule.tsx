@@ -1,86 +1,68 @@
-// Schedule.tsx
-import {useState} from "react";
-import WeekHeader from "@/pages/Schedule/components/WeekHeader";
-import ScheduleGrid from "@/pages/Schedule/components/ScheduleGrid";
-import {format} from "date-fns";
-import type {ScheduleEvent} from "@/types";
+import { useState, useMemo } from "react";
+import { getDay } from "date-fns";
+import PairCard from "@components/ui/cards/PairCard";
+import DateSelector from "@/pages/Schedule/components/DateSelector";
+import {scheduleMockData} from "@/constants";
 
-const MOCK_EVENTS: Record<string, ScheduleEvent[]> = {
-    "2025-12-18": [
-        {
-            id: "1",
-            title: "Литература",
-            startTime: "08:30",
-            endTime: "10:00",
-            color: "bg-[#F2F2F2]",
-            cabinet: "202",
-        },
-        {
-            id: "2",
-            title: "Русский язык",
-            startTime: "11:00",
-            endTime: "12:30",
-            color: "bg-[#F2F2F2]",
-            cabinet: "102",
-        },
-        {
-            id: "3",
-            title: "Разработка баз данных",
-            startTime: "15:00",
-            endTime: "17:00",
-            color: "bg-[#F2F2F2]",
-            cabinet: "405",
-        }
-    ],
-    "2025-12-19": [
-        {
-            id: "1",
-            title: "Литература",
-            startTime: "08:30",
-            endTime: "12:00",
-            color: "bg-[#F2F2F2]",
-            cabinet: "202",
-        },
-        {
-            id: "2",
-            title: "Русский язык",
-            startTime: "13:00",
-            endTime: "14:30",
-            color: "bg-[#F2F2F2]",
-            cabinet: "102",
-        },
-        {
-            id: "3",
-            title: "Разработка баз данных",
-            startTime: "16:50",
-            endTime: "18:00",
-            color: "bg-[#F2F2F2]",
-            cabinet: "405",
-        }
-    ]
-};
 
 const Schedule = () => {
-    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-    const dateKey = format(selectedDate, "yyyy-MM-dd");
-    const currentEvents = MOCK_EVENTS[dateKey] || [];
+  // Эмуляция "умного" распределения пар по дням недели
+  const currentDayLessons = useMemo(() => {
+    // getDay возвращает число: 0 - Вс, 1 - Пн, ..., 6 - Сб
+    const dayOfWeek = getDay(selectedDate);
 
-    return (
-        <div className="flex flex-col max-w-md mx-auto bg-white min-h-screen">
-            <div className="w-full flex justify-between mb-5 px-2">
-                <p className="text-black font-medium text-2xl">Расписание</p>
-                {/*<div className="flex gap-1 h-14.5 w-29 bg-custom-gray rounded-full items-center justify-between px-3">*/}
-                {/*    <img src="/assets/images/arrow.svg" className="w-5 h-5 opacity-90 rotate-180" alt="icon"/>*/}
-                {/*</div>*/}
-            </div>
-            <WeekHeader onDateSelect={setSelectedDate}/>
+    // Логика отображения:
+    switch (dayOfWeek) {
+      case 1: // Понедельник
+      case 3: // Среда
+      case 5: // Пятница
+        return scheduleMockData; // Показываем все пары
 
-            <div className="mt-6">
-                <ScheduleGrid events={currentEvents}/>
-            </div>
-        </div>
-    );
-}
+      case 2: // Вторник
+      case 4: // Четверг
+              // Показываем только первые две пары (для примера разнообразия)
+        return scheduleMockData.slice(0, 2);
+
+      case 6: // Суббота
+      case 0: // Воскресенье
+      default:
+        return []; // Выходные
+    }
+  }, [selectedDate]);
+
+  return (
+    <div className="flex flex-col gap-2">
+      {/* Выбор даты */}
+      <DateSelector
+        selectedDate={selectedDate}
+        onSelect={setSelectedDate}
+      />
+
+      {/* Список пар */}
+      <div className="flex flex-col gap-1.5 min-h-[200px]">
+        {currentDayLessons.length > 0 ? (
+          <div className="flex flex-col gap-2">
+            {currentDayLessons.map((lesson) => (
+              <PairCard
+                key={lesson.id}
+                name={lesson.subject}
+                cab={lesson.cabinet}
+                teacher={lesson.teacher}
+                time={lesson.time}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="py-10 flex flex-col items-center justify-center text-gray-400 gap-2">
+            <span className="text-4xl">😴</span>
+            <p>Нет пар</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default Schedule;
